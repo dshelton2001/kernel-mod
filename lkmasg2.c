@@ -9,13 +9,13 @@
 #include <linux/kernel.h>	  // Kernel header for convenient functions.
 #include <linux/fs.h>		  // File-system support.
 #include <linux/uaccess.h>	  // User access copy function support.
-#define DEVICE_NAME "lkmasg1" // Device name.
+#define DEVICE_NAME "lkmasg2" // Device name.
 #define CLASS_NAME "char"	  ///< The device class -- this is a character device driver
 
-MODULE_LICENSE("GPL");						 ///< The license type -- this affects available functionality
-MODULE_AUTHOR("John Aedo");					 ///< The author -- visible when you use modinfo
-MODULE_DESCRIPTION("lkmasg1 Kernel Module"); ///< The description -- see modinfo
-MODULE_VERSION("0.1");						 ///< A version number to inform users
+MODULE_LICENSE("GPL");							///< The license type -- this affects available functionality
+MODULE_AUTHOR("Dennis shelton/John Aedo");		///< The author -- visible when you use modinfo
+MODULE_DESCRIPTION("lkmasg2 Kernel Module");	///< The description -- see modinfo
+MODULE_VERSION("0.1");							///< A version number to inform users
 
 /**
  * Important variables that store data and keep track of relevant information.
@@ -106,6 +106,7 @@ void cleanup_module(void)
 static int open(struct inode *inodep, struct file *filep)
 {
 	printk(KERN_INFO "lkmasg1: device opened.\n");
+
 	return 0;
 }
 
@@ -115,6 +116,7 @@ static int open(struct inode *inodep, struct file *filep)
 static int close(struct inode *inodep, struct file *filep)
 {
 	printk(KERN_INFO "lkmasg1: device closed.\n");
+
 	return 0;
 }
 
@@ -124,6 +126,7 @@ static int close(struct inode *inodep, struct file *filep)
 static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset)
 {
 	printk(KERN_INFO "read stub");
+
 	return 0;
 }
 
@@ -133,5 +136,6 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
 static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t *offset)
 {
 	printk(KERN_INFO "write stub");
+
 	return len;
 }
