@@ -35,7 +35,11 @@ function remove()
 
 function run()
 {
-    ./test /dev/lkmasg2
+    ./test /dev/lkmasg2 testaroo
+    echo
+    ./test /dev/lkmasg2 wowie
+    echo
+    ./test /dev/lkmasg2 sowie
 }
 
 ##########

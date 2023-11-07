@@ -22,9 +22,9 @@ static char receive[BUFFER_LENGTH]; ///< The receive buffer from the LKM
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2)
+    if (argc != 2 && argc != 3)
     {
-        printf("Usage: test <path to device>\n");
+        printf("Usage: test <path to device> <string to test with>\n");
         exit(0);
     }
     char *devicepath = argv[1];
@@ -38,8 +38,16 @@ int main(int argc, char *argv[])
         perror("Failed to open the device...");
         return errno;
     }
-    printf("Type in a short string to send to the kernel module:\n");
-    scanf("%[^\n]%*c", stringToSend); // Read in a string (with spaces)
+
+    if (argc == 2)
+    {
+        printf("Type in a short string to send to the kernel module:\n");
+        scanf("%[^\n]%*c", stringToSend); // Read in a string (with spaces)
+    }
+    else
+    {
+        strcpy(stringToSend, argv[2]);
+    }
     printf("Writing message to the device [%s].\n", stringToSend);
     ret = write(fd, stringToSend, strlen(stringToSend)); // Send the string to the LKM
     if (ret < 0)
@@ -48,8 +56,11 @@ int main(int argc, char *argv[])
         return errno;
     }
 
-    printf("Press ENTER to read back from the device...\n");
-    getchar();
+    if(argc == 2)
+    {
+        printf("Press ENTER to read back from the device...\n");
+        getchar();
+    }
 
     printf("Reading from the device...\n");
     ret = read(fd, receive, BUFFER_LENGTH); // Read the response from the LKM
