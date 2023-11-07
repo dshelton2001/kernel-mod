@@ -50,16 +50,16 @@ static struct file_operations fops =
  */
 int init_module(void)
 {
-	printk(KERN_INFO "lkmasg1: installing module.\n");
+	printk(KERN_INFO "lkmasg2: installing module.\n");
 
 	// Allocate a major number for the device.
 	major_number = register_chrdev(0, DEVICE_NAME, &fops);
 	if (major_number < 0)
 	{
-		printk(KERN_ALERT "lkmasg1 could not register number.\n");
+		printk(KERN_ALERT "lkmasg2 could not register number.\n");
 		return major_number;
 	}
-	printk(KERN_INFO "lkmasg1: registered correctly with major number %d\n", major_number);
+	printk(KERN_INFO "lkmasg2: registered correctly with major number %d\n", major_number);
 
 	// Register the device class
 	lkmasg1Class = class_create(THIS_MODULE, CLASS_NAME);
@@ -69,7 +69,7 @@ int init_module(void)
 		printk(KERN_ALERT "Failed to register device class\n");
 		return PTR_ERR(lkmasg1Class); // Correct way to return an error on a pointer
 	}
-	printk(KERN_INFO "lkmasg1: device class registered correctly\n");
+	printk(KERN_INFO "lkmasg2: device class registered correctly\n");
 
 	// Register the device driver
 	lkmasg1Device = device_create(lkmasg1Class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
@@ -80,7 +80,7 @@ int init_module(void)
 		printk(KERN_ALERT "Failed to create the device\n");
 		return PTR_ERR(lkmasg1Device);
 	}
-	printk(KERN_INFO "lkmasg1: device class created correctly\n"); // Made it! device was initialized
+	printk(KERN_INFO "lkmasg2: device class created correctly\n"); // Made it! device was initialized
 
 	return 0;
 }
@@ -90,12 +90,12 @@ int init_module(void)
  */
 void cleanup_module(void)
 {
-	printk(KERN_INFO "lkmasg1: removing module.\n");
+	printk(KERN_INFO "lkmasg2: removing module.\n");
 	device_destroy(lkmasg1Class, MKDEV(major_number, 0)); // remove the device
 	class_unregister(lkmasg1Class);						  // unregister the device class
 	class_destroy(lkmasg1Class);						  // remove the device class
 	unregister_chrdev(major_number, DEVICE_NAME);		  // unregister the major number
-	printk(KERN_INFO "lkmasg1: Goodbye from the LKM!\n");
+	printk(KERN_INFO "lkmasg2: Goodbye from the LKM!\n");
 	unregister_chrdev(major_number, DEVICE_NAME);
 	return;
 }
@@ -105,7 +105,7 @@ void cleanup_module(void)
  */
 static int open(struct inode *inodep, struct file *filep)
 {
-	printk(KERN_INFO "lkmasg1: device opened.\n");
+	printk(KERN_INFO "lkmasg2: device opened.\n");
 
 	return 0;
 }
@@ -115,7 +115,7 @@ static int open(struct inode *inodep, struct file *filep)
  */
 static int close(struct inode *inodep, struct file *filep)
 {
-	printk(KERN_INFO "lkmasg1: device closed.\n");
+	printk(KERN_INFO "lkmasg2: device closed.\n");
 
 	return 0;
 }
@@ -126,6 +126,7 @@ static int close(struct inode *inodep, struct file *filep)
 static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset)
 {
 	printk(KERN_INFO "read stub");
+	printk(KERN_INFO "lkmasg2: obtained stub");
 
 	return 0;
 }
