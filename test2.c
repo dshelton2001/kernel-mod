@@ -22,18 +22,21 @@ static char receive[BUFFER_LENGTH]; ///< The receive buffer from the LKM
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2 && argc != 3)
+    if (argc != 4)
     {
-        printf("Usage: test <path to device> <string to test with>\n");
+        printf("Usage: test <path to device> <first string to test with> <second>\n");
         exit(0);
     }
     char *devicepath = argv[1];
 
-    int ret, fd, fc;
-    char stringToSend[BUFFER_LENGTH];
-    strncpy(stringToSend, "", sizeof(stringToSend));
+    int ret, fd;
+    char stringOne[BUFFER_LENGTH];
+    strncpy(stringOne, "", sizeof(stringOne));
 
-    printf("Starting device test code example...\n");
+    char stringTwo[BUFFER_LENGTH];
+    strncpy(stringTwo, "", sizeof(stringTwo));
+
+    printf("Starting device test 2 code example...\n");
     fd = open(devicepath, O_RDWR); // Open the device with read/write access
     if (fd < 0)
     {
@@ -41,28 +44,24 @@ int main(int argc, char *argv[])
         return errno;
     }
 
-    if (argc == 2)
-    {
-        printf("Type in a short string to send to the kernel module:\n");
-        scanf("%[^\n]%*c", stringToSend); // Read in a string (with spaces)
-    }
-    else
-    {
-        strcpy(stringToSend, argv[2]);
-    }
+    strcpy(stringOne, argv[2]);
+    strcpy(stringTwo, argv[3]);
+
     
-    printf("Writing message to the device [%s].\n", stringToSend);
-    ret = write(fd, stringToSend, strlen(stringToSend)); // Send the string to the LKM
+    printf("Writing message to the device [%s].\n", stringOne);
+    ret = write(fd, stringOne, strlen(stringOne)); // Send the string to the LKM
     if (ret < 0)
     {
         perror("Failed to write the message to the device.");
         return errno;
     }
 
-    if(argc == 2)
+    printf("Writing message to the device [%s].\n", stringTwo);
+    ret = write(fd, stringTwo, strlen(stringTwo)); // Send the string to the LKM
+    if (ret < 0)
     {
-        printf("Press ENTER to read back from the device...\n");
-        getchar();
+        perror("Failed to write the message to the device.");
+        return errno;
     }
 
     printf("Reading from the device...\n");
@@ -73,7 +72,7 @@ int main(int argc, char *argv[])
         return errno;
     }
     printf("The received message is: [%s]\n", receive);
-
+    
     printf("End of the program\n");
     return 0;
 }

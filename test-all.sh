@@ -35,11 +35,20 @@ function remove()
 
 function run()
 {
-    ./test /dev/lkmasg2 testaroo
+    echo "== Test 1 - 1 write, 1 read =="
+    ./test /dev/lkmasg2 message
     echo
-    ./test /dev/lkmasg2 wowie
+    echo "== Test 2 - 2 write, 1 read =="
+    ./test2 /dev/lkmasg2 testaroo wowie
     echo
-    ./test /dev/lkmasg2 sowie
+    echo "== Test max - 2 writes at max length =="
+    ./testmax /dev/lkmasg2
+    echo
+    echo "== Test buffer - 1 write to test buffers =="
+    ./testbuffer /dev/lkmasg2
+    echo
+    echo "== Test read - 1 write, TWO reads =="
+    ./testread /dev/lkmasg2 message
 }
 
 ##########
@@ -92,7 +101,7 @@ success=$?
 
 if [ $success = 1 ]
 then
-    echo "Cleanup successful."
+    echo "Cleanup successful.\n"
 else
     echo "Could not delete driver files. Check your makefile!"
 
